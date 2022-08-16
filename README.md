@@ -22,9 +22,9 @@ $NewVMSize = "Standard_D2s_v4"
 
 ## What script do?
 1. Retrive target VM information incuding: OS Disk, DataDisk, Network Interface Card, and Tags.
-2. Shut down VM and take the snapshot of OS disk
+2. Shut down VM and take the snapshot of OS disk and all data disk
 3. Detach all data disk
 4. Detach NIC (As Azure require at least one Nic to be attached to VM, it is done through attaching a dummy NIC)
 5. Remove original VM
 6. Using OS snapshot to create a new VM, re-attached all data disk and original NIC
-7. Purge OS snapshot (hashed out, recommend run manually after verification)
+7. Purge all snapshots (hashed out, recommend run manually after verification)
