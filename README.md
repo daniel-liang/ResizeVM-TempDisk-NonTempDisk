@@ -7,7 +7,7 @@ In order to resize a VM that has a local temp disk to a VM size with no local te
 
 ## How to use?
 1. Connect to your Virtual Machine that has a local temporary disk (for example, a D: Drive) as a admin.
-2. Follow the guidelines on the [Move Page File to C Drive](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/change-drive-letter#temporarily-move-pagefilesys-to-c-drive))) to move the page file from the local temporary disk (D: drive) to the C: drive. 
+2. Follow the guidelines on the [Move Page File to C Drive](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/change-drive-letter#temporarily-move-pagefilesys-to-c-drive) to move the page file from the local temporary disk (D: drive) to the C: drive. 
 3. Modify variable of powershell script and run:
 
    *Sample*
@@ -20,7 +20,7 @@ $NewVMSize = "Standard_D2s_v4"
 
 ```
 
-##Script details
+## What script do?
 1. Retrive target VM information incuding: OS Disk, DataDisk, Network Interface Card, and Tags.
 2. Shut down VM and take the snapshot of OS disk
 3. Detach all data disk
