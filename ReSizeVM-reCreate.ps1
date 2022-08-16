@@ -1,4 +1,4 @@
-﻿#Enter details of target VM
+#Enter details of target VM
 $subscriptionId = 'dd6bde2c-4319-4066-a69f-bb45f986e310'
 $resourceGroupName = 'poc-network-aue' 
 $vmName = 'dantstvm'
@@ -28,6 +28,15 @@ $snapshotName = $vmName+'-OS-snapshot'
 $snapshot =  New-AzSnapshotConfig -SourceUri $vm.StorageProfile.OsDisk.ManagedDisk.Id -Location $location -CreateOption copy
 New-AzSnapshot -Snapshot $snapshot -SnapshotName $snapshotName -ResourceGroupName $resourceGroupName
 Get-AzSnapshot -ResourceGroupName $resourceGroupName
+
+### take snapshot on all data disk ###
+foreach ($disk in $original_DataDisk) 
+    {
+        $snapshotDataDiskName = $disk.Name+'-Data-snapshot'
+        $snapshotDataDisk =  New-AzSnapshotConfig -SourceUri $disk.ManagedDisk.Id -Location $location -CreateOption copy
+        New-AzSnapshot -Snapshot $snapshotDataDisk -SnapshotName $snapshotDataDiskName -ResourceGroupName $resourceGroupName
+    }
+
 
 ### Detach all Data Disks ###
 foreach ($disk in $original_DataDisk) 
@@ -89,6 +98,13 @@ Set-AzResource -ResourceGroupName $resourceGroupName -Name $vm.Name -ResourceTyp
 # 1. remove dummy nic
 Remove-AzNetworkInterface -Name $dummynic.Name -ResourceGroupName $resourceGroupName -Force
 
-# 2. remove snapshot
-#Remove-AzSnapshot -ResourceGroupName $resourceGroupName -SnapshotName $snapshotName
+# 2. remove OS Disk snapshot
+#Remove-AzSnapshot -ResourceGroupName $resourceGroupName -SnapshotName $snapshotName -Force
+
+# 3. remove Data Disk snapshot
+#foreach ($disk in $original_DataDisk) 
+#    {
+#        $snapshotDataDiskName = $disk.Name+'-Data-snapshot'
+#        Remove-AzSnapshot -ResourceGroupName $resourceGroupName -SnapshotName $snapshotDataDiskName -Force
+#    }
 
