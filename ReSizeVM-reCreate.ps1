@@ -1,7 +1,7 @@
 #Enter details of target VM
-$subscriptionId = 'dd6bde2c-4319-4066-a69f-bb45f986e310'
-$resourceGroupName = 'poc-network-aue' 
-$vmName = 'dantstvm'
+$subscriptionId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx'
+$resourceGroupName = 'test-resource-group' 
+$vmName = 'tstvm'
 $NewVMSize = "Standard_D2s_v4"
 
 
@@ -16,6 +16,7 @@ $original_nic = Get-AzNetworkInterface -ResourceId $vm.NetworkProfile.NetworkInt
 
 #3. Tag details
 $sourceTags = $vm | Select -ExpandProperty Tags
+$OSTags = Get-AzDisk -DiskName $original_OS_DiskName -ResourceGroupName $resourceGroupName | Select -ExpandProperty Tags
 
 #4. Data Disk details
 $original_DataDisk = $vm.StorageProfile.DataDisks
@@ -84,7 +85,7 @@ $NewVMConfig = Add-AzVMNetworkInterface -VM $NewVMConfig -Id $original_nic.Id
 # 6. Attach Data Disk to new VM
 foreach ($disk in $original_DataDisk)
     {
-        $NewVMConfig = Add-AzVMDataDisk -VM $NewVMConfig -Name $Disk.Name -CreateOption Attach -ManagedDiskId (Get-AzDisk -DiskName $disk.Name).id -Lun $disk.Lun
+        $NewVMConfig = Add-AzVMDataDisk -VM $NewVMConfig -Name $Disk.Name -CreateOption Attach -ManagedDiskId (Get-AzDisk -DiskName $disk.Name).id -Lun $disk.Lun 
     }
 
 # 7. Create the virtual machine with Managed Disk
@@ -92,6 +93,10 @@ $NewVM = New-AzVM -VM $NewVMConfig -ResourceGroupName $resourceGroupName -Locati
 
 # 8. Assign tag to VM
 Set-AzResource -ResourceGroupName $resourceGroupName -Name $vm.Name -ResourceType "Microsoft.Compute/VirtualMachines" -Tag $sourceTags -Force
+
+# 9. Assign tag to OS Disk
+Set-AzResource -ResourceGroupName $resourceGroupName -Name $original_OS_DiskName -ResourceType "Microsoft.Compute/Disks" -Tag $OSTags -Force
+
 
 
 ### CLEAN UP ###
