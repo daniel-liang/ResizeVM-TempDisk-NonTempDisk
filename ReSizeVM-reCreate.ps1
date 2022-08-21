@@ -1,8 +1,15 @@
+#reset variable
+Remove-Variable * -ErrorAction SilentlyContinue
+
+
+
 #Enter details of target VM
 $subscriptionId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx'
 $resourceGroupName = 'test-resource-group' 
 $vmName = 'tstvm'
 $NewVMSize = "Standard_D2s_v4"
+
+
 
 
 ### Retrive VM Info ###
@@ -48,7 +55,7 @@ Update-AzVM -ResourceGroupName $resourceGroupName -VM $vm
 
 
 ### Detach original Nic ###
-# 1. Create and attach dump nic
+# 1. Create and attach dummy nic
 $dummynic = New-AzNetworkInterface -Name ($original_nic.Name+'-dummy') -ResourceGroupName $original_nic.ResourceGroupName -Location $original_nic.Location -SubnetId $original_nic.IpConfigurations.Subnet.Id 
 Add-AzVMNetworkInterface -VM $vm -Id $dummynic.Id -Primary
 
@@ -95,7 +102,7 @@ $NewVM = New-AzVM -VM $NewVMConfig -ResourceGroupName $resourceGroupName -Locati
 Set-AzResource -ResourceGroupName $resourceGroupName -Name $vm.Name -ResourceType "Microsoft.Compute/VirtualMachines" -Tag $sourceTags -Force
 
 # 9. Assign tag to OS Disk
-Set-AzResource -ResourceGroupName $resourceGroupName -Name $original_OS_DiskName -ResourceType "Microsoft.Compute/Disks" -Tag $OSTags -Force
+Set-AzResource -ResourceGroupName $resourceGroupName -Name $osDiskName -ResourceType "Microsoft.Compute/Disks" -Tag $OSTags -Force
 
 
 
@@ -112,4 +119,3 @@ Remove-AzNetworkInterface -Name $dummynic.Name -ResourceGroupName $resourceGroup
 #        $snapshotDataDiskName = $disk.Name+'-Data-snapshot'
 #        Remove-AzSnapshot -ResourceGroupName $resourceGroupName -SnapshotName $snapshotDataDiskName -Force
 #    }
-
