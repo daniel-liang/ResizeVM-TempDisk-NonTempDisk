@@ -5,10 +5,9 @@ Remove-Variable * -ErrorAction SilentlyContinue
 
 #Enter details of target VM
 $subscriptionId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx'
-$resourceGroupName = 'test-resource-group' 
+$resourceGroupName = 'tst-vmsize-rg' 
 $vmName = 'tstvm'
-$NewVMSize = "Standard_D2s_v4"
-
+$NewVMSize = "Standard_D4s_v4"
 
 
 
@@ -74,7 +73,7 @@ sleep 20
 # 1. Create new OS disk from snapshot
 $osDiskName = $original_OS_DiskName + "_NEW"
 $snapshot = Get-AzSnapshot -ResourceGroupName $resourceGroupName -SnapshotName $snapshotName
-$diskConfig = New-AzDiskConfig -Location $snapshot.Location -SourceResourceId $snapshot.Id -CreateOption Copy
+$diskConfig = New-AzDiskConfig -Location $snapshot.Location -SourceResourceId $snapshot.Id -CreateOption Copy -DiskSizeGB $vm.StorageProfile.OsDisk.DiskSizeGB -SkuName $vm.StorageProfile.OsDisk.ManagedDisk.StorageAccountType
 $disk = New-AzDisk -Disk $diskConfig -ResourceGroupName $resourceGroupName -DiskName $osDiskName
 
 # 2. Initialize VM configuration
