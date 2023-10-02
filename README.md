@@ -31,3 +31,4 @@ $NewVMSize = "Standard_D2s_v4"
 
 
 ## Test Run
+feature01
