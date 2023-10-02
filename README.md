@@ -28,3 +28,6 @@ $NewVMSize = "Standard_D2s_v4"
 5. Remove original VM
 6. Using OS snapshot to create a new VM, re-attached all data disk and original NIC
 7. Purge all snapshots (hashed out, recommend run manually after verification)
+
+
+## Final Feature
