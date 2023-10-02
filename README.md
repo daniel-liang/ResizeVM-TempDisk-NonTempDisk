@@ -32,3 +32,5 @@ $NewVMSize = "Standard_D2s_v4"
 
 ## Test Run
 Test Context for feature01
+Second change of feature01
+
